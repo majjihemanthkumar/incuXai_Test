@@ -1,25 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #0d1117;
-  --foreground: #c9d1d9;
-  --card: #161b22;
-  --card-foreground: #c9d1d9;
-}
-
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #F5F7FA;
+  color: #1E293B;
+  font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Infinity Scroll Animation */
+/* Infinity Scroll Animation for Sponsors */
 @keyframes scrollText {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .scroll-container {
@@ -36,4 +39,12 @@ body {
 .sponsor-logo {
   max-height: 50px;
   margin: 0 40px;
+  filter: grayscale(100%) brightness(200%);
+  opacity: 0.8;
+}
+
+/* Standardizing transitions globally */
+button,
+input {
+  transition: all 0.2s ease-in-out;
 }

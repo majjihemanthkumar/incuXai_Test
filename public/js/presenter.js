@@ -1,15 +1,48 @@
-// js/presenter.js — Presenter Dashboard Logic
-// Handles session creation, activity management, and real-time results
+import { insforge, handleResponse } from './insforge-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
 
     // ─── State ───
+    let sessionId = null;
     let sessionCode = null;
     let currentType = 'poll';
     let activities = [];
     let currentActivityIndex = -1;
     let participantNames = [];
+    let realtimeChannel = null;
+
+    async function setupRealtime(sId) {
+        if (realtimeChannel) await realtimeChannel.unsubscribe();
+
+        realtimeChannel = insforge.realtime.channel(`session:${sId}`);
+
+        // Listen for new responses
+        realtimeChannel.on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'responses'
+        }, async (payload) => {
+            console.log('✦ New response received via Realtime:', payload.new);
+            // Re-fetch aggregated results via socket (or SDK if we want)
+            // For now, the server still emits poll-results etc. via socket
+            // because it handles aggregation.
+        });
+
+        // Listen for new participants
+        realtimeChannel.on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'participants',
+            filter: `session_id=eq.${sId}`
+        }, (payload) => {
+            console.log('✦ New participant via Realtime:', payload.new);
+            // We can update the count locally if we want
+        });
+
+        await realtimeChannel.subscribe();
+        console.log(`✦ Subscribed to Realtime channel: session:${sId}`);
+    }
 
     // ─── DOM Elements ───
     const createModal = document.getElementById('createModal');
@@ -54,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         socket.emit('create-session', { name }, (res) => {
             if (res.success) {
+                sessionId = res.session.id;
                 sessionCode = res.session.code;
                 roomCodeEl.textContent = sessionCode;
                 document.title = `incuXai — ${name}`;
@@ -65,6 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 createModal.classList.add('hidden');
                 presenterLayout.classList.remove('hidden');
                 showToast(`Session "${name}" created! Code: ${sessionCode}`);
+
+                // Setup InsForge Realtime
+                setupRealtime(sessionId);
+            } else {
+                console.error('✦ Session creation failed:', res.error);
+                alert('Failed to create session: ' + (res.error || 'Unknown error'));
             }
         });
     });

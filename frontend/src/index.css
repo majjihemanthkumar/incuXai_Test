@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0d1117;
+  --foreground: #c9d1d9;
+  --card: #161b22;
+  --card-foreground: #c9d1d9;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Infinity Scroll Animation */
+@keyframes scrollText {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.scroll-container {
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.scroll-content {
+  display: inline-flex;
+  animation: scrollText 20s linear infinite;
+}
+
+.sponsor-logo {
+  max-height: 50px;
+  margin: 0 40px;
+}

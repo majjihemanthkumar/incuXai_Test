@@ -1,5 +1,4 @@
-// js/audience.js — Audience Participation Logic
-// Handles joining sessions and responding to all activity types
+import { insforge, handleResponse } from './insforge-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const socket = io();

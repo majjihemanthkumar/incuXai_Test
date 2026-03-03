@@ -1,4 +1,4 @@
-// js/landing.js — Landing Page Logic
+import { insforge, handleResponse } from './insforge-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // ─── Theme Toggle ───
@@ -51,17 +51,27 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Check if session exists via API
+        // Check if session exists via InsForge SDK
         try {
-            const res = await fetch(`/api/session/${code}`);
-            const data = await res.json();
+            const { data: session, error } = await insforge.database
+                .from('sessions')
+                .select('code, is_active')
+                .eq('code', code)
+                .maybeSingle();
 
-            if (data.exists) {
+            if (error) throw error;
+
+            if (session) {
+                if (!session.is_active) {
+                    showToast('This session has already ended.');
+                    return;
+                }
                 window.location.href = `audience.html?code=${code}&name=${encodeURIComponent(name)}`;
             } else {
                 showToast('Session not found. Check your code and try again.');
             }
         } catch (err) {
+            console.error('Join Error:', err);
             showToast('Connection error. Please try again.');
         }
     });

@@ -3,61 +3,58 @@
 
 const express = require('express');
 const router = express.Router();
-const { getSession } = require('../models/Session');
+const { DbSession } = require('../models/DbSession');
 
 // Check if session exists
-router.get('/session/:code', (req, res) => {
-    const session = getSession(req.params.code);
-    if (!session) {
-        return res.status(404).json({ error: 'Session not found', exists: false });
+router.get('/session/:code', async (req, res) => {
+    try {
+        const session = await DbSession.getByCode(req.params.code);
+        if (!session) {
+            return res.status(404).json({ error: 'Session not found', exists: false });
+        }
+        res.json({
+            exists: true,
+            name: session.name,
+            code: session.code,
+            participantCount: 0, // Could fetch count
+            isActive: session.is_active
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    res.json({
-        exists: true,
-        name: session.name,
-        code: session.code,
-        participantCount: session.getParticipantCount(),
-        isActive: session.isActive
-    });
 });
 
 // Get current results for a session
-router.get('/session/:code/results', (req, res) => {
-    const session = getSession(req.params.code);
-    if (!session) {
-        return res.status(404).json({ error: 'Session not found' });
-    }
+router.get('/session/:code/results', async (req, res) => {
+    try {
+        const session = await DbSession.getByCode(req.params.code);
+        if (!session) {
+            return res.status(404).json({ error: 'Session not found' });
+        }
 
-    const activity = session.getCurrentActivity();
-    if (!activity) {
-        return res.json({ hasActivity: false });
-    }
+        const activity = (session.activities || []).find(a => a.is_open);
+        if (!activity) {
+            return res.json({ hasActivity: false });
+        }
 
-    let results;
-    switch (activity.type) {
-        case 'poll':
-            results = session.getPollResults(activity.id);
-            break;
-        case 'quiz':
-            results = session.getQuizResults(activity.id);
-            break;
-        case 'wordcloud':
-            results = session.getWordCloudResults(activity.id);
-            break;
-        case 'qa':
-            results = session.getQAResults(activity.id);
-            break;
+        const results = await DbSession.getResults(activity.id, activity.type);
+        res.json({ hasActivity: true, activity: results });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    res.json({ hasActivity: true, activity: results });
 });
 
 // Get session info (for presenter)
-router.get('/session/:code/info', (req, res) => {
-    const session = getSession(req.params.code);
-    if (!session) {
-        return res.status(404).json({ error: 'Session not found' });
+router.get('/session/:code/info', async (req, res) => {
+    try {
+        const session = await DbSession.getByCode(req.params.code);
+        if (!session) {
+            return res.status(404).json({ error: 'Session not found' });
+        }
+        res.json(session);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    res.json(session.toJSON());
 });
 
 module.exports = router;

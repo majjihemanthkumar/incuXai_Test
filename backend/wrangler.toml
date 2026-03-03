@@ -1,0 +1,19 @@
+name = "incuxai-backend"
+main = "src/index.ts"
+compatibility_date = "2024-07-25"
+
+# Setup D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "incuxai-db"
+database_id = "00000000-0000-0000-0000-000000000000" # Replace with actual DB ID after creation
+
+# Setup Durable Object binding for the Exam Room
+[[durable_objects.bindings]]
+name = "EXAM_ROOM"
+class_name = "ExamRoom"
+
+# Instruct Wrangler to run migrations on the Durable Object class
+[[migrations]]
+tag = "v1"
+new_classes = ["ExamRoom"]

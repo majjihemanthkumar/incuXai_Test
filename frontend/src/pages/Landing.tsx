@@ -1,8 +1,10 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { ClayNavbar } from '../components/ClayNavbar';
 import { ClayCard } from '../components/ClayCard';
 import { ClayButton } from '../components/ClayButton';
+import { insforge } from '../lib/insforge';
 import {
     AiOutlineRocket,
     AiOutlineTeam,
@@ -11,6 +13,50 @@ import {
 } from 'react-icons/ai';
 
 export const LandingPage: React.FC = () => {
+    const navigate = useNavigate();
+    const [joinCode, setJoinCode] = useState('');
+    const [joinName, setJoinName] = useState('');
+    const [isJoining, setIsJoining] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+    const [showJoinForm, setShowJoinForm] = useState(false);
+
+    const handleJoin = async () => {
+        if (joinCode.length !== 6) {
+            setErrorMsg('Code must be 6 digits.');
+            return;
+        }
+        if (!joinName.trim()) {
+            setErrorMsg('Please enter your name.');
+            return;
+        }
+        setIsJoining(true);
+        setErrorMsg('');
+
+        try {
+            const { data: session, error } = await insforge.database
+                .from('sessions')
+                .select('code, is_active')
+                .eq('code', joinCode)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            if (session) {
+                if (!session.is_active) {
+                    setErrorMsg('This session has already ended.');
+                } else {
+                    navigate(`/session/${joinCode}`, { state: { name: joinName } });
+                }
+            } else {
+                setErrorMsg('Session not found.');
+            }
+        } catch (err) {
+            setErrorMsg('Connection error.');
+        } finally {
+            setIsJoining(false);
+        }
+    };
+
     const features = [
         {
             icon: <AiOutlineRocket className="text-3xl" />,
@@ -75,10 +121,45 @@ export const LandingPage: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="flex flex-col sm:flex-row gap-6 mb-24"
+                    className="flex flex-col sm:flex-row gap-6 mb-24 relative"
                 >
-                    <ClayButton variant="primary" className="text-lg px-8">Get Started Free</ClayButton>
-                    <ClayButton variant="secondary" className="text-lg px-8">View Demo</ClayButton>
+                    <AnimatePresence mode="wait">
+                        {!showJoinForm ? (
+                            <motion.div key="buttons" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex gap-4">
+                                <ClayButton variant="primary" className="text-lg px-8" onClick={() => setShowJoinForm(true)}>Join a Session</ClayButton>
+                                <ClayButton variant="secondary" className="text-lg px-8" onClick={() => navigate('/dashboard')}>Go to Dashboard</ClayButton>
+                            </motion.div>
+                        ) : (
+                            <motion.div key="form" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="flex flex-col gap-4 items-center">
+                                <ClayCard className="p-6 flex flex-col gap-4 shadow-clay-medium w-[340px]">
+                                    <h3 className="text-xl font-bold">Join Session</h3>
+                                    {errorMsg && <p className="text-red-500 text-sm font-semibold">{errorMsg}</p>}
+                                    <input
+                                        type="text"
+                                        placeholder="6-Digit Code"
+                                        className="clay-input text-center text-lg tracking-widest font-mono"
+                                        maxLength={6}
+                                        value={joinCode}
+                                        onChange={(e) => setJoinCode(e.target.value.replace(/\D/g, ''))}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Your Name"
+                                        className="clay-input text-center text-lg"
+                                        value={joinName}
+                                        onChange={(e) => setJoinName(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+                                    />
+                                    <div className="flex gap-2 w-full mt-2">
+                                        <ClayButton variant="secondary" className="flex-1" onClick={() => { setShowJoinForm(false); setErrorMsg(''); }}>Back</ClayButton>
+                                        <ClayButton variant="primary" className="flex-1" onClick={handleJoin} disabled={isJoining}>
+                                            {isJoining ? 'Joining...' : 'Join'}
+                                        </ClayButton>
+                                    </div>
+                                </ClayCard>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </motion.div>
 
                 {/* Floating Clay Illustrations Placeholder */}

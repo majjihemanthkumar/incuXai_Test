@@ -1,0 +1,37 @@
+src/components/ClayButton.tsx(26,10): error TS2322: Type '{ children: ReactNode; form?: string | undefined; formAction?: string | undefined; formEncType?: string | undefined; formMethod?: string | undefined; formNoValidate?: boolean | undefined; ... 269 more ...; disabled: boolean | undefined; }' is not assignable to type 'Omit<HTMLMotionProps<"button">, "ref">'.
+  Types of property 'onDrag' are incompatible.
+    Type 'DragEventHandler<HTMLButtonElement> | undefined' is not assignable to type '((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void) | undefined'.
+      Type 'DragEventHandler<HTMLButtonElement>' is not assignable to type '(event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void'.
+        Types of parameters 'event' and 'event' are incompatible.
+          Type 'MouseEvent | TouchEvent | PointerEvent' is not assignable to type 'DragEvent<HTMLButtonElement>'.
+            Type 'MouseEvent' is missing the following properties from type 'DragEvent<HTMLButtonElement>': dataTransfer, nativeEvent, isDefaultPrevented, isPropagationStopped, persist
+src/components/ClayCard.tsx(18,13): error TS2322: Type 'false | { opacity: number; y: number; }' is not assignable to type 'VariantLabels | TargetAndTransition | undefined'.
+  Type 'false' is not assignable to type 'VariantLabels | TargetAndTransition | undefined'.
+src/lib/insforge.ts(2,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/lib/socket.ts(6,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/Contact.tsx(2,1): error TS6133: 'motion' is declared but its value is never read.
+src/pages/Login.tsx(2,1): error TS6133: 'motion' is declared but its value is never read.
+src/store/useExamStore.ts(1,24): error TS2307: Cannot find module 'zustand' or its corresponding type declarations.
+src/store/useExamStore.ts(25,48): error TS7006: Parameter 'set' implicitly has an 'any' type.
+src/store/useExamStore.ts(37,15): error TS7006: Parameter 'role' implicitly has an 'any' type.
+src/store/useExamStore.ts(38,19): error TS7006: Parameter 'examId' implicitly has an 'any' type.
+src/store/useExamStore.ts(38,27): error TS7006: Parameter 'participantId' implicitly has an 'any' type.
+src/store/useExamStore.ts(39,17): error TS7006: Parameter 'status' implicitly has an 'any' type.
+src/store/useExamStore.ts(40,19): error TS7006: Parameter 'currentQuestion' implicitly has an 'any' type.
+src/store/useExamStore.ts(41,19): error TS7006: Parameter 'timeLeft' implicitly has an 'any' type.
+src/store/useExamStore.ts(42,25): error TS7006: Parameter 'answerFeedback' implicitly has an 'any' type.
+src/store/useExamStore.ts(43,18): error TS7006: Parameter 'reason' implicitly has an 'any' type.
+src/store/useExamStore.ts(44,22): error TS7006: Parameter 'leaderboard' implicitly has an 'any' type.
+src/views/AdminView.tsx(3,10): error TS2305: Module '"../lib/socket"' has no exported member 'SocketClient'.
+src/views/AdminView.tsx(17,59): error TS7006: Parameter 'data' implicitly has an 'any' type.
+src/views/AdminView.tsx(41,39): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/views/AdminView.tsx(41,42): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/views/AdminView.tsx(42,97): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/views/AdminView.tsx(131,51): error TS7006: Parameter 'student' implicitly has an 'any' type.
+src/views/AdminView.tsx(131,60): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+src/views/StudentView.tsx(4,10): error TS2305: Module '"../lib/socket"' has no exported member 'SocketClient'.
+src/views/StudentView.tsx(5,23): error TS2307: Cannot find module 'react-toastify' or its corresponding type declarations.
+src/views/StudentView.tsx(7,80): error TS6133: 'email' is declared but its value is never read.
+src/views/StudentView.tsx(18,47): error TS7006: Parameter 'data' implicitly has an 'any' type.
+src/views/StudentView.tsx(34,50): error TS7006: Parameter 'data' implicitly has an 'any' type.
+src/views/StudentView.tsx(38,47): error TS7006: Parameter 'data' implicitly has an 'any' type.

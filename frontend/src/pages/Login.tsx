@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { ClayCard } from '../components/ClayCard';
 import { ClayButton } from '../components/ClayButton';
 import { AiOutlineMail, AiOutlineLock, AiOutlineGoogle, AiOutlineGithub } from 'react-icons/ai';

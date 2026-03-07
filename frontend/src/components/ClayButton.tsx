@@ -1,20 +1,18 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ClayButtonProps {
-    children: React.ReactNode;
-    onClick?: () => void;
-    className?: string;
+interface ClayButtonProps extends HTMLMotionProps<"button"> {
     variant?: 'primary' | 'secondary' | 'pink' | 'mint' | 'purple';
-    type?: 'button' | 'submit';
+    className?: string;
 }
 
 export const ClayButton: React.FC<ClayButtonProps> = ({
     children,
-    onClick,
     className = '',
     variant = 'primary',
-    type = 'button'
+    type = 'button',
+    disabled,
+    ...props
 }) => {
     const variantStyles = {
         primary: 'bg-clay-blue text-white',
@@ -27,10 +25,11 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
     return (
         <motion.button
             type={type}
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onClick}
-            className={`clay-button ${variantStyles[variant]} ${className}`}
+            whileHover={!disabled ? { scale: 1.02, y: -2 } : {}}
+            whileTap={!disabled ? { scale: 0.98 } : {}}
+            className={`clay-button ${variantStyles[variant]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={disabled}
+            {...props}
         >
             {children}
         </motion.button>

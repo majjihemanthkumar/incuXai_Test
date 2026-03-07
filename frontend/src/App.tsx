@@ -5,6 +5,7 @@ import { FeaturesPage } from './pages/Features';
 import { DashboardPage } from './pages/Dashboard';
 import { LoginPage } from './pages/Login';
 import { ContactPage } from './pages/Contact';
+import { AudiencePage } from './pages/Audience';
 
 const App: React.FC = () => {
     return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/session/:code" element={<AudiencePage />} />
         </Routes>
     );
 };

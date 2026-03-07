@@ -14,8 +14,8 @@ export const ClayCard: React.FC<ClayCardProps> = ({
 }) => {
     return (
         <motion.div
-            initial={animate ? { opacity: 0, y: 20 } : false}
-            whileInView={animate ? { opacity: 1, y: 0 } : false}
+            initial={animate ? { opacity: 0, y: 20 } : undefined}
+            whileInView={animate ? { opacity: 1, y: 0 } : undefined}
             viewport={{ once: true }}
             className={`clay-card p-6 ${className}`}
         >

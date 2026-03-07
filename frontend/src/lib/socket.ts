@@ -1,59 +1,19 @@
-import { toast } from 'react-toastify';
+import { io } from 'socket.io-client';
 
-export class SocketClient {
-    ws: WebSocket | null = null;
-    heartbeatInterval: any = null;
-    onMessageHandlers: Record<string, (data: any) => void> = {};
+// On Render or local, if the frontend is served by the backend, '/' works.
+// For Vite dev server, we point to the backend port (e.g., :3000 if not proxying).
+// Since the Express server runs on 3000, we use it directly in dev.
+// @ts-ignore
+const backendUrl = import.meta.env.DEV ? 'http://localhost:3000' : window.location.origin;
 
-    connect(examId: string, role: string, participantId: string) {
-        // Determine WS URL based on current host - in dev fallback to local worker
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.port === '3000' ? '127.0.0.1:8787' : window.location.host;
-        const url = `${protocol}//${host}/api/exams/${examId}/ws?role=${role}&participantId=${participantId}`;
+export const socket = io(backendUrl, {
+    transports: ['websocket', 'polling'],
+});
 
-        this.ws = new WebSocket(url);
+socket.on('connect', () => {
+    console.log('Connected to socket server:', socket.id);
+});
 
-        this.ws.onopen = () => {
-            console.log('Connected to Server-Authoritative Exam Room');
-            this.send({ type: 'JOIN' });
-
-            // Heartbeat every 2 seconds for anti-cheat
-            if (role === 'student') {
-                this.heartbeatInterval = setInterval(() => {
-                    this.send({ type: 'HEARTBEAT' });
-                }, 2000);
-            }
-        };
-
-        this.ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.type && this.onMessageHandlers[data.type]) {
-                    this.onMessageHandlers[data.type](data);
-                }
-            } catch (e) {
-                console.error('WS parse error', e);
-            }
-        };
-
-        this.ws.onclose = () => {
-            if (this.heartbeatInterval) clearInterval(this.heartbeatInterval);
-            toast.error('Connection to server lost.');
-        };
-    }
-
-    disconnect() {
-        if (this.ws) this.ws.close();
-        if (this.heartbeatInterval) clearInterval(this.heartbeatInterval);
-    }
-
-    send(data: any) {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify(data));
-        }
-    }
-
-    on(type: string, handler: (data: any) => void) {
-        this.onMessageHandlers[type] = handler;
-    }
-}
+socket.on('disconnect', () => {
+    console.log('Disconnected from socket server');
+});

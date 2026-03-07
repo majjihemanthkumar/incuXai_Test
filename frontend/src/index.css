@@ -1,52 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #F5F7FA;
-  color: #1E293B;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
+@layer base {
+  body {
+    @apply bg-background text-text-dark font-sans transition-colors duration-300;
+  }
 }
 
-/* Infinity Scroll Animation for Sponsors */
-@keyframes scrollText {
+@layer components {
+  .clay-card {
+    @apply bg-background rounded-clay shadow-clay-light border border-white/40 backdrop-blur-sm;
+  }
+
+  .clay-card-medium {
+    @apply shadow-clay-medium;
+  }
+
+  .clay-button {
+    @apply px-6 py-3 rounded-clay font-semibold transition-all duration-300 shadow-clay-light hover:shadow-clay-medium active:shadow-clay-pressed active:scale-95 transform hover:-translate-y-1;
+  }
+
+  .clay-input {
+    @apply w-full px-5 py-4 rounded-clay bg-background shadow-clay-pressed border-none focus:ring-2 focus:ring-clay-blue outline-none text-text-dark placeholder-text-dark/40 transition-all duration-300;
+  }
+
+  .clay-nav {
+    @apply sticky top-4 mx-4 z-50 bg-background/70 backdrop-blur-md rounded-clay shadow-clay-light border border-white/20 px-6 py-3;
+  }
+}
+
+/* Animations */
+@keyframes float {
   0% {
-    transform: translateX(0);
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
   }
 
   100% {
-    transform: translateX(-50%);
+    transform: translateY(0px);
   }
 }
 
-.scroll-container {
-  overflow: hidden;
-  white-space: nowrap;
-  pointer-events: none;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
-.scroll-content {
-  display: inline-flex;
-  animation: scrollText 30s linear infinite;
-}
-
-.sponsor-logo {
-  max-height: 45px;
-  margin: 0 60px;
-  opacity: 0.9;
-  transition: transform 0.3s ease;
-}
-
-/* Standardizing transitions globally */
-button,
-input {
-  transition: all 0.2s ease-in-out;
+.glass-pill {
+  @apply bg-white/30 backdrop-blur-md border border-white/40 px-3 py-1 rounded-full text-xs font-medium;
 }

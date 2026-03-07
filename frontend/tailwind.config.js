@@ -7,21 +7,24 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#0B1F3A',
-                secondary: '#1E293B',
-                accent: '#0D9488',
-                background: '#F5F7FA',
-                border: '#E2E8F0',
-                success: '#15803D',
-                error: '#B91C1C',
-                warning: '#D97706'
+                background: '#F5F6FA',
+                'clay-blue': '#A7C7E7',
+                'clay-pink': '#F6C1CC',
+                'clay-mint': '#BEE3DB',
+                'clay-purple': '#C7CEEA',
+                'text-dark': '#2F2F2F',
+            },
+            borderRadius: {
+                'clay': '30px',
+            },
+            boxShadow: {
+                'clay-light': '8px 8px 16px rgba(0,0,0,0.08), -8px -8px 16px rgba(255,255,255,0.8)',
+                'clay-medium': '12px 12px 24px rgba(0,0,0,0.12), -12px -12px 24px rgba(255,255,255,0.9)',
+                'clay-pressed': 'inset 6px 6px 12px rgba(0,0,0,0.08), inset -6px -6px 12px rgba(255,255,255,0.8)',
             },
             fontFamily: {
-                sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                sans: ['Poppins', 'Inter', 'sans-serif'],
             },
-            spacing: {
-                // Enforce 8px spacing system implicitly, standard tailwind handles this well (e.g. p-2 = 8px, p-4 = 16px)
-            }
         },
     },
     plugins: [],

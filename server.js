@@ -30,8 +30,12 @@ app.use('/api', apiRoutes);
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // --- Catch-All for React Router (fallback for deployment) ---
-app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendDistPath, 'index.html'));
+app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+        res.sendFile(path.join(frontendDistPath, 'index.html'));
+    } else {
+        next();
+    }
 });
 
 // --- Socket.io Event Handlers ---

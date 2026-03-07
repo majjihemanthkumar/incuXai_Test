@@ -266,6 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 activityForm.reset();
                 resetOptions(currentType);
                 showToast('Activity added! Click it to launch.');
+            } else {
+                showToast(res.error || 'Failed to add activity');
             }
         });
     });
@@ -458,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderActivityList();
                 showResults(res.activity);
             } else {
-                showToast('No more activities');
+                showToast(res.error || 'No more activities');
             }
         });
     });
@@ -482,6 +484,8 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.emit('end-session', { code: sessionCode }, (res) => {
                 if (res.success) {
                     showFinalLeaderboard(res.leaderboard);
+                } else {
+                    showToast(res.error || 'Failed to end session');
                 }
             });
         }

@@ -16,8 +16,9 @@ router.get('/session/:code', async (req, res) => {
             exists: true,
             name: session.name,
             code: session.code,
-            participantCount: 0, // Could fetch count
-            isActive: session.is_active
+            participantCount: 0,
+            isActive: session.is_active,
+            is_active: session.is_active
         });
     } catch (error) {
         res.status(500).json({ error: error.message });

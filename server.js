@@ -22,23 +22,16 @@ const PORT = process.env.PORT || 3000;
 // --- Middleware ---
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'), { index: 'index.html' }));
+const frontendDistPath = path.join(__dirname, 'frontend', 'dist');
+app.use(express.static(frontendDistPath));
 app.use('/api', apiRoutes);
 
 // --- Health Check ---
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-// --- Explicit Page Routes (fallback for deployment) ---
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/presenter', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'presenter.html'));
-});
-
-app.get('/audience', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'audience.html'));
+// --- Catch-All for React Router (fallback for deployment) ---
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
 });
 
 // --- Socket.io Event Handlers ---

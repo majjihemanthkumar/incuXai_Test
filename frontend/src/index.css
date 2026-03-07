@@ -29,18 +29,20 @@ body {
   overflow: hidden;
   white-space: nowrap;
   pointer-events: none;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
 }
 
 .scroll-content {
   display: inline-flex;
-  animation: scrollText 20s linear infinite;
+  animation: scrollText 30s linear infinite;
 }
 
 .sponsor-logo {
-  max-height: 50px;
-  margin: 0 40px;
-  filter: grayscale(100%) brightness(200%);
-  opacity: 0.8;
+  max-height: 45px;
+  margin: 0 60px;
+  opacity: 0.9;
+  transition: transform 0.3s ease;
 }
 
 /* Standardizing transitions globally */

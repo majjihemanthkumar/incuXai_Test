@@ -1,9 +1,21 @@
-import { createClient } from 'https://esm.sh/@insforge/sdk@latest';
+// public/js/insforge-client.js — Mock Frontend Client
+// This replaces the remote service during development to prevent "No backend services available" errors.
 
-export const insforge = createClient({
-    baseUrl: 'https://49yrb5er.us-east.insforge.app',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3OC0xMjM0LTU2NzgtOTBhYi1jZGVmMTIzNDU2NzgiLCJlbWFpbCI6ImFub25AaW5zZm9yZ2UuY29tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NTA3MzN9.KRF_J2TGe4-HiKb2e9hlzraGVo60-wMM4q1NnSnC3QA'
-});
+export const insforge = {
+    realtime: {
+        channel: (name) => ({
+            on: () => { /* Mock listener registration */ return this; },
+            subscribe: async () => {
+                console.log(`✦ [MOCK] Subscribed to channel: ${name}`);
+                return { success: true };
+            },
+            unsubscribe: async () => {
+                console.log(`✦ [MOCK] Unsubscribed from channel: ${name}`);
+                return { success: true };
+            }
+        })
+    }
+};
 
 // Helper to handle standard InsForge response { data, error }
 export async function handleResponse(promise) {

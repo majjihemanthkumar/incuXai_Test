@@ -9,7 +9,7 @@ const sponsors = [
 
 export const SponsorScroll: React.FC = () => {
     return (
-        <div className="absolute bottom-0 w-full py-6 scroll-container border-t border-white/10">
+        <div className="absolute bottom-0 w-full py-10 scroll-container border-t border-white/5">
             <div className="scroll-content flex items-center">
                 {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((src, idx) => (
                     <img key={idx} src={src} className="sponsor-logo" alt="sponsor" loading="eager" />

@@ -160,9 +160,14 @@ export const StudentView: React.FC<{ name: string; email: string }> = ({ name, e
     if (status === 'transition') {
         return (
             <div className="min-h-screen bg-primary relative overflow-hidden flex flex-col items-center justify-center">
-                <div className="z-10 text-center">
-                    <h2 className="text-3xl text-white/90 font-light mb-6">Next Question Starting...</h2>
-                    <div className="text-7xl font-semibold text-white">{Math.max(0, timeLeft)}</div>
+                <div className="z-10 text-center -mt-20">
+                    <h2 className="text-4xl text-white/90 font-light mb-4 animate-pulse">Stay Tuned!</h2>
+                    <p className="text-white/60 text-lg">Next question is arriving shortly...</p>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
+                    <div className="text-[20rem] font-bold text-white tracking-tighter leading-none">
+                        {Math.max(0, timeLeft)}
+                    </div>
                 </div>
                 <SponsorScroll />
             </div>
@@ -214,10 +219,10 @@ export const StudentView: React.FC<{ name: string; email: string }> = ({ name, e
                                     onClick={() => handleAnswer(opt)}
                                     disabled={answered}
                                     className={`p-5 rounded-lg border-2 text-left text-base font-medium transition-all flex items-center ${isSelected
-                                            ? 'bg-accent/10 border-accent text-primary shadow-sm'
-                                            : answered
-                                                ? 'bg-gray-50 border-border text-secondary/50 cursor-not-allowed'
-                                                : 'bg-white border-border hover:border-secondary hover:bg-gray-50 text-secondary'
+                                        ? 'bg-accent/10 border-accent text-primary shadow-sm'
+                                        : answered
+                                            ? 'bg-gray-50 border-border text-secondary/50 cursor-not-allowed'
+                                            : 'bg-white border-border hover:border-secondary hover:bg-gray-50 text-secondary'
                                         }`}
                                 >
                                     <span className={`inline-flex items-center justify-center w-8 h-8 rounded shrink-0 mr-4 border text-sm font-bold ${isSelected ? 'bg-accent text-white border-accent' : 'bg-gray-100 border-border text-secondary'
@@ -233,12 +238,18 @@ export const StudentView: React.FC<{ name: string; email: string }> = ({ name, e
             </div>
 
             {answerFeedback && (
-                <div className="w-full max-w-3xl mt-2 fade-in">
-                    <div className={`text-center p-5 rounded-xl border-l-4 shadow-sm bg-white font-semibold text-lg tracking-wide ${answerFeedback.isCorrect
-                            ? 'border-success text-success'
-                            : 'border-error text-error'
+                <div className="w-full max-w-3xl mt-2 fade-in relative">
+                    <div className={`text-center p-8 rounded-xl border-l-8 shadow-lg bg-white font-bold text-2xl tracking-wide mb-12 transform transition-all hover:scale-[1.01] ${answerFeedback.isCorrect
+                        ? 'border-success text-success'
+                        : 'border-error text-error'
                         }`}>
-                        {answerFeedback.isCorrect ? 'Correct' : 'Incorrect'}
+                        {answerFeedback.isCorrect ? '✨ Correct! Excellent job!' : '❌ Incorrect. Keep trying!'}
+                    </div>
+
+                    {/* Integrated Sponsor Scroll for gap time */}
+                    <div className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t border-border py-4">
+                        <p className="text-center text-[10px] uppercase tracking-[0.2em] text-secondary/40 font-bold mb-3">Our Proud Partners</p>
+                        <SponsorScroll />
                     </div>
                 </div>
             )}

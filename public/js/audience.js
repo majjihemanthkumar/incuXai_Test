@@ -20,6 +20,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let questionStartTime = null;
     let timerInterval = null;
 
+    // ─── Sponsor Logos ───
+    const SPONSOR_LOGOS = [
+        'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg'
+    ];
+
+    function getSponsorScrollHtml() {
+        const logos = [...SPONSOR_LOGOS, ...SPONSOR_LOGOS, ...SPONSOR_LOGOS];
+        return `
+            <div class="scroll-container">
+                <div class="ad-header" style="text-align:center;">Proudly Sponsored By</div>
+                <div class="scroll-content">
+                    ${logos.map(logo => `<img src="${logo}" class="sponsor-logo" alt="Sponsor">`).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     // ─── DOM Elements ───
     const waitingState = document.getElementById('waitingState');
     const activityArea = document.getElementById('activityArea');
@@ -83,9 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let countdown = 5;
         audienceContent.innerHTML = `
-            <div style="text-align:center; padding:40px 0;">
-                <div id="countdownNum" style="font-size:5rem; font-weight:800; color:var(--primary); animation:pulse 1s infinite;">${countdown}</div>
-                <p style="color:var(--text-muted); margin-top:12px;">Next question coming up...</p>
+            <div style="text-align:center; padding:20px 0;">
+                <div id="countdownNum" style="font-size:4rem; font-weight:800; color:var(--primary); animation:pulse 1s infinite;">${countdown}</div>
+                <p style="color:var(--text-muted); margin-top:8px; font-size:0.9rem;">Next question arriving shortly...</p>
+                ${getSponsorScrollHtml()}
             </div>
         `;
 
@@ -377,6 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
             text.textContent = 'Wrong Answer!';
             correctAnswerEl.innerHTML = `The correct answer was: <strong style="color:#22c55e;">${escapeHtml(data.correctOption)}</strong><br><span style="font-size:0.95rem; color:var(--text-muted);">+0 points</span>`;
         }
+
+        // Remove existing sponsor scrolls if any (to avoid duplicates)
+        const existing = quizFeedback.querySelectorAll('.scroll-container');
+        existing.forEach(el => el.remove());
+
+        // Add Sponsor Scroll to feedback
+        quizFeedback.insertAdjacentHTML('beforeend', getSponsorScrollHtml());
     });
 
     // Q&A results (for upvoting from audience)

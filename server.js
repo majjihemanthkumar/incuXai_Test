@@ -33,10 +33,8 @@ app.use('/api', apiRoutes);
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // --- Explicit Page Routes (SPA Support) ---
-// Using a RegExp object is the most compatible way to catch all routes in Express 5
-app.get(/^((?!\/api).)*$/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// We serve index.html for any request that isn't for an API or static file
+// This is done via middleware at the end of the stack to avoid regex parsing issues
 
 // --- Socket.io Event Handlers ---
 io.on('connection', (socket) => {
@@ -371,8 +369,9 @@ io.on('connection', (socket) => {
 });
 
 // --- Start Server ---
-server.listen(PORT, () => {
-    console.log(`
+if (process.env.NODE_ENV !== 'test') {
+    server.listen(PORT, () => {
+        console.log(`
   ╔══════════════════════════════════════════╗
   ║                                          ║
   ║     🚀  LivePoll Server Running!         ║
@@ -381,4 +380,18 @@ server.listen(PORT, () => {
   ║                                          ║
   ╚══════════════════════════════════════════╝
     `);
+    });
+}
+
+// Support React Router (SPA) Fallback
+app.use((req, res, next) => {
+    // If it's an API request that hasn't been handled, it's a real 404
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({ error: 'API route not found' });
+    }
+    // Otherwise, serve the React app
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// Export for Vercel/Serverless support
+module.exports = app;

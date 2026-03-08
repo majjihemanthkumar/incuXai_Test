@@ -33,10 +33,9 @@ app.use('/api', apiRoutes);
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // --- Explicit Page Routes (SPA Support) ---
-// This catch-all route ensures React Router handles the navigation.
-// It must be placed AFTER static files and API routes.
-app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) return; // Ensure API requests aren't caught
+// Note: Express 5 requires (.*) instead of * for wildcards
+app.get('(.*)', (req, res) => {
+    if (req.path.startsWith('/api')) return;
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

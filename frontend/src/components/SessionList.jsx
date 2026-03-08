@@ -13,13 +13,17 @@ const SessionList = ({ sessions }) => {
             </div>
 
             <div className="space-y-4">
-                {sessions.map((session, index) => (
+                {sessions.length === 0 ? (
+                    <div className="text-center py-10 text-textSecondary font-medium">
+                        No sessions found. Create your first one!
+                    </div>
+                ) : sessions.map((session, index) => (
                     <div
-                        key={index}
+                        key={session.id || index}
                         className="group flex items-center gap-4 p-4 rounded-3xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-100"
                     >
-                        <div className={`w-12 h-12 rounded-2xl ${session.color} flex items-center justify-center text-white`}>
-                            {session.icon}
+                        <div className={`w-12 h-12 rounded-2xl ${session.color || 'bg-primary/20'} flex items-center justify-center text-primary`}>
+                            {session.icon || '💬'}
                         </div>
 
                         <div className="flex-1">
@@ -27,18 +31,21 @@ const SessionList = ({ sessions }) => {
                                 {session.name}
                             </h4>
                             <div className="flex items-center gap-4 mt-1 text-xs text-textSecondary">
-                                <span className="flex items-center gap-1">
-                                    <Calendar size={12} /> {session.date}
+                                <span className="flex items-center gap-1 font-bold">
+                                    Code: {session.code}
                                 </span>
                                 <span className="flex items-center gap-1">
-                                    <Users size={12} /> {session.participants} members
+                                    <Calendar size={12} /> {new Date(session.createdAt).toLocaleDateString()}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <Users size={12} /> {session.participantCount || 0} participants
                                 </span>
                             </div>
                         </div>
 
                         <div className="text-right">
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${session.statusColor}`}>
-                                {session.status}
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${session.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
+                                {session.isActive ? 'Active' : 'Ended'}
                             </span>
                         </div>
                     </div>

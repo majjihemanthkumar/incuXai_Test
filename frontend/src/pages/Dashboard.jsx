@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Users,
     Activity,
@@ -7,7 +7,8 @@ import {
     FileText,
     Menu,
     Bell,
-    Search
+    Search,
+    Loader2
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import DashboardCard from '../components/DashboardCard';
@@ -18,7 +19,36 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [statsData, setStatsData] = useState(null);
+    const [sessionsData, setSessionsData] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [statsRes, sessionsRes] = await Promise.all([
+                    fetch('/api/stats'),
+                    fetch('/api/sessions')
+                ]);
+
+                const stats = await statsRes.json();
+                const sessions = await sessionsRes.json();
+
+                setStatsData(stats);
+                setSessionsData(sessions);
+            } catch (err) {
+                console.error('Error fetching dashboard data:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+        // Refresh every 30 seconds
+        const interval = setInterval(fetchData, 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleNewSession = async () => {
         try {
@@ -33,7 +63,6 @@ const Dashboard = () => {
             }
         } catch (err) {
             console.error('Failed to create session:', err);
-            // Fallback for demo
             navigate('/presenter/DEFAULT');
         }
     };
@@ -42,53 +71,23 @@ const Dashboard = () => {
         {
             icon: Activity,
             title: 'Active Sessions',
-            value: '12',
+            value: statsData?.activeSessions || '0',
             bgColor: 'bg-primary',
             textColor: 'text-white'
         },
         {
             icon: Users,
             title: 'Total Participants',
-            value: '2,840',
+            value: statsData?.totalParticipants?.toLocaleString() || '0',
             bgColor: 'bg-secondary',
             textColor: 'text-white'
         },
         {
             icon: BarChart3,
-            title: 'Average Engagement',
-            value: '84%',
+            title: 'Participation Rate',
+            value: `${statsData?.participationRate || '0'} / session`,
             bgColor: 'bg-success',
             textColor: 'text-white'
-        },
-    ];
-
-    const recentSessions = [
-        {
-            name: 'Team Weekly Sync',
-            date: 'March 08, 2026',
-            participants: 24,
-            icon: '💬',
-            color: 'bg-blue-400',
-            status: 'Completed',
-            statusColor: 'bg-green-100 text-green-600'
-        },
-        {
-            name: 'Product Roadmap Review',
-            date: 'March 05, 2026',
-            participants: 12,
-            icon: '🚀',
-            color: 'bg-purple-400',
-            status: 'Reviewing',
-            statusColor: 'bg-yellow-100 text-yellow-600'
-        },
-        {
-            name: 'Design System Hackathon',
-            date: 'Feb 28, 2026',
-            participants: 56,
-            icon: '🎨',
-            color: 'bg-pink-400',
-            status: 'Draft',
-            statusColor: 'bg-gray-100 text-gray-600'
         },
     ];
 
@@ -142,7 +141,14 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                     {/* Left: Session List */}
                     <div className="xl:col-span-2">
-                        <SessionList sessions={recentSessions} />
+                        {isLoading ? (
+                            <ClayCard className="flex flex-col items-center justify-center py-20">
+                                <Loader2 className="animate-spin text-primary mb-4" size={40} />
+                                <p className="text-textSecondary font-bold">Synchronizing Data...</p>
+                            </ClayCard>
+                        ) : (
+                            <SessionList sessions={sessionsData} />
+                        )}
                     </div>
 
                     {/* Right: Quick Actions */}

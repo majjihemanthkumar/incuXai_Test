@@ -1,11 +1,59 @@
-// models/Session.js
-// In-memory session store for LivePoll
-
 const { generateCode } = require('../utils/codeGenerator');
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const path = require('path');
+
+const DATA_DIR = path.join(__dirname, '../data');
+const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.json');
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
 
 // In-memory store
 const sessions = new Map();
+
+// Helper to save sessions to disk
+function saveToDisk() {
+    try {
+        const data = Array.from(sessions.values()).map(s => ({
+            id: s.id,
+            code: s.code,
+            name: s.name,
+            createdAt: s.createdAt,
+            activities: s.activities,
+            currentActivityIndex: s.currentActivityIndex,
+            isActive: s.isActive
+            // We don't persist participants or socket IDs as they are ephemeral
+        }));
+        fs.writeFileSync(SESSIONS_FILE, JSON.stringify(data, null, 2));
+    } catch (err) {
+        console.error('Error saving sessions to disk:', err);
+    }
+}
+
+// Helper to load sessions from disk
+function loadFromDisk() {
+    try {
+        if (fs.existsSync(SESSIONS_FILE)) {
+            const data = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
+            data.forEach(sData => {
+                const session = new Session(sData.name);
+                session.id = sData.id;
+                session.code = sData.code;
+                session.createdAt = new Date(sData.createdAt);
+                session.activities = sData.activities;
+                session.currentActivityIndex = sData.currentActivityIndex;
+                session.isActive = sData.isActive;
+                sessions.set(session.code, session);
+            });
+            console.log(`✦ Loaded ${sessions.size} sessions from disk`);
+        }
+    } catch (err) {
+        console.error('Error loading sessions from disk:', err);
+    }
+}
 
 class Session {
     constructor(name, presenterSocketId) {
@@ -335,8 +383,12 @@ class Session {
 function createSession(name, presenterSocketId) {
     const session = new Session(name, presenterSocketId);
     sessions.set(session.code, session);
+    saveToDisk();
     return session;
 }
+
+// Load data on startup
+loadFromDisk();
 
 function getSession(code) {
     return sessions.get(code) || null;
@@ -358,10 +410,15 @@ function getAllSessionCodes() {
     return new Set(sessions.keys());
 }
 
+function getAllSessions() {
+    return Array.from(sessions.values());
+}
+
 module.exports = {
     createSession,
     getSession,
     getSessionBySocketId,
     deleteSession,
-    getAllSessionCodes
+    getAllSessionCodes,
+    getAllSessions
 };

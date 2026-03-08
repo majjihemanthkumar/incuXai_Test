@@ -33,9 +33,8 @@ app.use('/api', apiRoutes);
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // --- Explicit Page Routes (SPA Support) ---
-// Note: Express 5 requires (.*) instead of * for wildcards
-app.get('(.*)', (req, res) => {
-    if (req.path.startsWith('/api')) return;
+// Using a RegExp object is the most compatible way to catch all routes in Express 5
+app.get(/^((?!\/api).)*$/, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

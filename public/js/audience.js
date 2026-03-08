@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const audienceContent = document.getElementById('audienceContent');
     const sessionNameDisplay = document.getElementById('sessionNameDisplay');
     const themeToggle = document.getElementById('themeToggle');
+    const adBar = document.getElementById('adBar');
 
     // ─── Theme ───
     const savedTheme = localStorage.getItem('livepoll-theme') || 'dark';
@@ -100,11 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 countdownEl.textContent = countdown;
             }
         }, 1000);
+
+        // Show ad bar during countdown
+        if (adBar) adBar.classList.remove('hidden');
     }
 
     // ─── Display Activity (after countdown) ───
     function displayActivity(activity) {
         hideAll();
+        if (adBar) adBar.classList.add('hidden'); // Hide ad bar when activity starts
         activityArea.classList.remove('hidden');
         audienceQuestion.textContent = activity.question;
 
@@ -362,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimer();
         hideAll();
         quizFeedback.classList.remove('hidden');
+        if (adBar) adBar.classList.remove('hidden'); // Show ad bar during result gap
 
         const icon = document.getElementById('quizFeedbackIcon');
         const text = document.getElementById('quizFeedbackText');

@@ -1307,3 +1307,84 @@ h1, h2, h3, h4, h5, h6 {
 .text-sm { font-size: 0.85rem; }
 .text-muted { color: var(--text-secondary); }
 .w-full { width: 100%; }
+
+/* ─── Advertisement Bar ─── */
+.ad-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1000px;
+    height: 80px;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    animation: slideUpAd 0.5s ease-out;
+}
+
+.ad-bar.hidden {
+    display: none;
+}
+
+.ad-label {
+    padding: 0 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border-color);
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.02);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ad-track {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ad-scroller {
+    display: inline-flex;
+    align-items: center;
+    gap: 100px;
+    padding-left: 50px;
+    animation: scrollAds 30s linear infinite;
+}
+
+.ad-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ad-item img {
+    height: 40px;
+    object-fit: contain;
+    filter: brightness(0.9) contrast(1.1);
+}
+
+.ad-item span {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+@keyframes scrollAds {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes slideUpAd {
+    from { transform: translate(-50%, 100px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}

@@ -300,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="poll-bar-count">${r.votes}</div>
                     </div>
-                    ${r.voterNames && r.voterNames.length > 0 ? `<div class="voter-names" style="padding-left:156px;margin-top:-8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-muted);">👤 ${r.voterNames.map(n => escapeHtml(n)).join(', ')}</div>` : ''}
                 `).join('')}
             </div>
             <p class="text-center text-muted mt-lg">${data.totalVotes} vote${data.totalVotes !== 1 ? 's' : ''}</p>
@@ -337,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     ${i < 3 ? ['🥇', '🥈', '🥉'][i] : '#' + (i + 1)}
                                 </div>
                                 <div class="qa-content" style="flex:1;">
-                                    <div style="font-weight:600; font-size:0.95rem;">${escapeHtml(p.name)} <span style="color:var(--primary); font-size:0.85rem;">${p.score}pts</span></div>
+                                    <div style="font-weight:600; font-size:0.95rem;">Participant <span style="color:var(--primary); font-size:0.85rem;">${p.score}pts</span></div>
                                     <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Answered: <strong style="color:${p.isCorrect ? '#22c55e' : '#ef4444'}">${escapeHtml(p.answeredOption)}</strong> • ${p.responseTime}</div>
                                 </div>
                                 <div style="font-size:1.4rem;">
@@ -463,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     ${i < 3 ? ['🥇', '🥈', '🥉'][i] : '#' + (i + 1)}
                                 </div>
                                 <div style="flex:1;">
-                                    <div style="font-weight:600; font-size:0.95rem;">${escapeHtml(p.name)}</div>
+                                    <div style="font-weight:600; font-size:0.95rem;">Participant ${i + 1}</div>
                                     <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">⭐ ${p.totalScore} pts — ${p.correct}/${p.total} correct (${p.accuracy}%)</div>
                                 </div>
                             </div>
@@ -472,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
                         <button class="btn btn-secondary" style="flex:1;" id="exportCSVBtn">📊 Export CSV</button>
                         <button class="btn btn-secondary" style="flex:1;" id="exportPDFBtn">📄 Export PDF</button>
-                        <button class="btn btn-primary" style="flex:1;" id="showToAudienceBtn">📡 Show to Audience</button>
                     </div>
                 ` : '<p class="text-muted" style="margin-bottom:24px;">No quiz responses recorded.</p>'}
                 <a href="/" class="btn btn-primary btn-lg w-full">← Back to Home</a>

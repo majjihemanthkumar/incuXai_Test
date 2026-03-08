@@ -157,7 +157,11 @@ const Dashboard = () => {
                                 >
                                     <Plus size={18} /> New Session
                                 </ClayButton>
-                                <ClayButton variant="secondary" className="w-full py-4 text-sm">
+                                <ClayButton
+                                    variant="secondary"
+                                    className="w-full py-4 text-sm"
+                                    onClick={() => alert('Reporting feature coming soon to incuXai Pro!')}
+                                >
                                     <FileText size={18} /> View Reports
                                 </ClayButton>
                             </div>
@@ -166,7 +170,11 @@ const Dashboard = () => {
                         <ClayCard bgColor="bg-gradient-to-br from-[#5B8DEF] to-[#A855F7]" className="text-white">
                             <h3 className="text-lg font-bold mb-2">Go Premium!</h3>
                             <p className="text-white/80 text-sm mb-6">Unlock unlimited participants and custom branding features.</p>
-                            <ClayButton variant="white" className="w-full py-2 text-xs text-primary font-bold">
+                            <ClayButton
+                                variant="white"
+                                className="w-full py-2 text-xs text-primary font-bold"
+                                onClick={() => navigate('/login')}
+                            >
                                 Upgrade Now
                             </ClayButton>
                         </ClayCard>
